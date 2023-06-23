@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "firebase/auth";
+import {getDatabase, ref, child, get } from "firebase/database"
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -21,24 +22,38 @@ const provider = new GoogleAuthProvider();
 
 export function login() {
     signInWithPopup(auth, provider)
-        .then((result) => {
-            // This gives you a Google Access Token. You can use it to access the Google API.
-            // const credential = GoogleAuthProvider.credentialFromResult(result);
-            // const token = credential.accessToken;
-            // The signed-in user info.
-            const user = result.user;
-            // IdP data available using getAdditionalUserInfo(result)
-            // ...
-            console.log(user);
-        }).catch((error) => {
-            // // Handle Errors here.
-            // const errorCode = error.code;
-            // const errorMessage = error.message;
-            // // The email of the user's account used.
-            // const email = error.customData.email;
-            // // The AuthCredential type that was used.
-            // const credential = GoogleAuthProvider.credentialFromError(error);
-            // // ...
-            console.log(error)
-        });
+        .catch(console.error)
+        
+        // .then((result) => {
+        //     const user = result.user;
+        //     console.log('user',user);
+        // }).catch((error) => {
+        //     console.log(error)
+        // });
+}
+
+
+export  function logout() {
+    signOut(auth);
+}
+export function onUserStateChange(callback){
+     onAuthStateChanged(auth,(user) =>{
+        // 1. 사용자가 있는 경우에 (로그인한경우)
+
+
+        callback(user)
+        // if(user){
+        //     const uid = user.uid;
+        // }else{
+            
+        // } 
+     })
+}
+
+async function adminUser(user){
+    // 2. 사용자가 어드민 권한을 가지고 있는지 확인
+    // 3. {...user, isAdmin : true/false}
+    return get(ref(database, 'admins')).then((snapshot) => {
+
+    })
 }

@@ -2,8 +2,26 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { BsFillPencilFill } from 'react-icons/bs';
 import { FiShoppingBag } from "react-icons/fi"
-import { login } from "../api/firebase"
+import { login , logout, onUserStateChange} from "../api/firebase"
+import { useState } from 'react';
+import { useEffect } from 'react';
+import User from '../pages/User';
 export default function Header() {
+    const [user, setUser ] = useState('');
+    
+    useEffect(()=>{
+        onUserStateChange((user) =>{
+            console.log(user);
+            setUser(user);
+        })
+    },[])
+    
+    // const HandleLogin = () =>{
+    //     login()
+    // }
+    // const HandleLogout = () =>{
+    //     logout()
+    // }
     return (
         <header className='flex justify-between border-b border-gray-300 p-4'>
             <Link to='/' className='flex items-center text-4xl text-brand'>
@@ -12,11 +30,16 @@ export default function Header() {
             </Link>
             <nav className='flex items-center gap-4 italic'>
                 <Link to='/products'>Products</Link>
-                <Link to='/carts'>Carts</Link>
-                <Link to='/products/new' className='text-2xl'>
+                {user && <Link to='/carts'>Carts</Link>}
+               {user &&  <Link to='/products/new' className='text-2xl'>
                     <BsFillPencilFill />
-                </Link>
-                <button onClick={login} className='italic'>Login</button>
+                </Link>}
+                {user && <User user={user}/>}
+                {!user ? 
+                    (<button onClick={login} className='italic'>Login</button>)
+                    :  
+                    (<button onClick={logout} className='italic'>Logout</button>)
+                }
             </nav>
         </header>
     )
