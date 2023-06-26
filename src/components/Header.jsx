@@ -6,6 +6,8 @@ import { login , logout, onUserStateChange} from "../api/firebase"
 import { useState } from 'react';
 import { useEffect } from 'react';
 import User from '../pages/User';
+import Button from './ui/Button';
+
 export default function Header() {
     const [user, setUser ] = useState('');
     
@@ -31,14 +33,16 @@ export default function Header() {
             <nav className='flex items-center gap-4 italic'>
                 <Link to='/products'>Products</Link>
                 {user && <Link to='/carts'>Carts</Link>}
-               {user &&  <Link to='/products/new' className='text-2xl'>
+                {user && user.isAdmin && (
+                    <Link to='/products/new' className='text-2xl'>
                     <BsFillPencilFill />
-                </Link>}
+                </Link>
+                )}
                 {user && <User user={user}/>}
                 {!user ? 
-                    (<button onClick={login} className='italic'>Login</button>)
+                    (<Button onClick={login} text="Login"/>)
                     :  
-                    (<button onClick={logout} className='italic'>Logout</button>)
+                    (<Button onClick={logout} text="Logout"/>)
                 }
             </nav>
         </header>
