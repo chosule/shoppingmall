@@ -7,16 +7,10 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import User from '../pages/User';
 import Button from './ui/Button';
+import { useAuthContext } from './context/AuthContext';
 
 export default function Header() {
-    const [user, setUser ] = useState('');
-    
-    useEffect(()=>{
-        onUserStateChange((user) =>{
-            console.log(user);
-            setUser(user);
-        })
-    },[])
+
     
     // const HandleLogin = () =>{
     //     login()
@@ -24,6 +18,8 @@ export default function Header() {
     // const HandleLogout = () =>{
     //     logout()
     // }
+
+    const {user, login, logout} = useAuthContext();
     return (
         <header className='flex justify-between border-b border-gray-300 p-4'>
             <Link to='/' className='flex items-center text-4xl text-brand'>
