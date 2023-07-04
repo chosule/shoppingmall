@@ -2,7 +2,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "firebase/auth";
-import { getDatabase, ref, child, get } from 'firebase/database';
+import { getDatabase, ref, set , get } from 'firebase/database';
+import {v4 as uuid} from "uuid"
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -46,4 +47,27 @@ async function adminUser(user) {
       }
       return user;
     });
+}
+
+
+// 새로운 제품 등록 
+export async function addNewProduct(product, imageUrl){
+  const id = uuid();    
+  return set(ref(database, `products/${id}`), {
+        ...product,
+        id,
+        price: parseInt(product.price),
+        image:imageUrl,
+        options:product.options.split(','),
+      })
+}
+
+export async function getProducts(){
+  return get(ref(database, 'products'))
+        .then(snapshot =>{
+          if(snapshot.exists()){
+          return Object.values(snapshot.val());
+          }
+    return [];
+  })
 }

@@ -10,8 +10,6 @@ import Button from './ui/Button';
 import { useAuthContext } from './context/AuthContext';
 
 export default function Header() {
-
-    
     // const HandleLogin = () =>{
     //     login()
     // }
