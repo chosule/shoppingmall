@@ -1,13 +1,12 @@
 import React from 'react'
-import { useState } from 'react'
-import { addNewProduct } from '../api/firebase'
+import Banner from '../components/Banner'
+import Products from './Products'
 
 export default function Home() {
-    // console.log('상품들',addNewProduct(product))
-    console.log('d',addNewProduct)
     return (
         <div>
-            
+            <Banner/>
+            <Products/>
         </div>
     )
 }

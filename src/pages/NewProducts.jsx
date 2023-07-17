@@ -13,7 +13,7 @@ export default function NewProducts() {
     const [isUploadging, setIsUploading] = useState(false);
     const [success , setSuccess ] = useState();
 
-    const handleSubmit = (event) =>{                                                                                            
+    const handleSubmit = (event) =>{                                                                                        
         event.preventDefault();
         setIsUploading(true);
         uploadImage(file)
@@ -25,12 +25,13 @@ export default function NewProducts() {
                 setTimeout(()=>{
                  setSuccess(null);   
                 },4000);
+                setProduct('');
+                setFile('');
             })
         })
         .finally(() => setIsUploading(false))
         
     }
-    console.log(product)
     
     const handleChange = (event) =>{
         const {name, value, files} = event.target;

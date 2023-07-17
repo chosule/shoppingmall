@@ -8,14 +8,16 @@ export default function Products() {
         error,
         data: products
     } = useQuery(['products'] , getProducts) //unique key, api호출함수
+    // console.log(products)
     return(
         <>
             {isLoading && <p>..loading</p>}
             {error && <p>{error}</p>}
-            <ul>
-                {products && products.map((product) => 
-                    <ProductCard key={product.id} 
-                    product={product} />)
+            <ul className="grid grid-cols-1 md:grid-cols-3 lg-grid-cols-4 gap-4 ">
+                {products && 
+                    products.map((product) => 
+                        <ProductCard key={product.id} 
+                        product={product} />)
                 }
             </ul>
         </>

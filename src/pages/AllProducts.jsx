@@ -1,8 +1,8 @@
 import React from 'react'
-import ProductCard from './ProductCard'
+import Products from './Products'
 
 export default function AllProducts() {
     return (
-        <ProductCard/>
+        <Products/>
     )
 }
