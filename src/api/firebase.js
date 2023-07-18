@@ -1,9 +1,14 @@
-
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "firebase/auth";
-import { getDatabase, ref, set , get ,remove } from 'firebase/database';
-import {v4 as uuid} from "uuid";
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut,
+  onAuthStateChanged,
+} from "firebase/auth";
+import { getDatabase, ref, set, get, remove } from "firebase/database";
+import { v4 as uuid } from "uuid";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -38,7 +43,7 @@ export function onUserStateChange(callback) {
 }
 
 async function adminUser(user) {
-  return get(ref(database, 'admins')) //
+  return get(ref(database, "admins")) //
     .then((snapshot) => {
       if (snapshot.exists()) {
         const admins = snapshot.val();
@@ -49,46 +54,40 @@ async function adminUser(user) {
     });
 }
 
-
-// 새로운 제품 등록 
-export async function addNewProduct(product, image){
-  const id = uuid();    
-  return set(ref(database, `products/${id}`), 
-      {
-        ...product,
-        id,
-        price: parseInt(product.price),
-        image,
-        options:product.options.split(','),
-      })
+// 새로운 제품 등록
+export async function addNewProduct(product, image) {
+  const id = uuid();
+  return set(ref(database, `products/${id}`), {
+    ...product,
+    id,
+    price: parseInt(product.price),
+    image,
+    options: product.options.split(","),
+  });
 }
 
-
 export async function getProducts() {
-  return get(ref(database, 'products')).then((snapshot) => {
+  return get(ref(database, "products")).then((snapshot) => {
     if (snapshot.exists()) {
       return Object.values(snapshot.val());
     }
     return [];
   });
 }
- 
 
-export async function getCart(userId){
-  return get(ref(database,`carts/${userId}`))
-  .then((snapshot) =>{
-   const items= snapshot.val() || {};
-   console.log(items,'item') // 장바구니에 담으면 items에 추가됨
-   return Object.values(items);
-  })
+export async function getCart(userId) {
+  return get(ref(database, `carts/${userId}`)).then((snapshot) => {
+    const items = snapshot.val() || {};
+    //  console.log(items,'item') // 장바구니에 담으면 items에 추가됨
+    return Object.values(items);
+  });
 }
 
-export async function addOrUpdateToCart(userId,product){
-  console.log('userId',userId);
-  return set(ref(database,`carts/${userId}/${product.id}`),product);
+export async function addOrUpdateToCart(userId, product) {
+  console.log("userId", userId);
+  return set(ref(database, `carts/${userId}/${product.id}`), product);
 }
 
-export async function removeFromCart(userId,productId){
-  return remove(ref(database, `carts/${userId}/${productId}`))
+export async function removeFromCart(userId, productId) {
+  return remove(ref(database, `carts/${userId}/${productId}`));
 }
-
