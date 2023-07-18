@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {useLocation} from 'react-router-dom';
 import {useState} from "react"
 import Button from '../components/ui/Button';
+import { useAuthContext } from '../context/AuthContext'
+import { addOrUpdateToCart } from '../api/firebase';
 
 export default function ProductDetail() {
     const{
@@ -10,15 +12,17 @@ export default function ProductDetail() {
         }
     }= useLocation();
     const [selected ,setSelected] = useState(options && options[0])
-    console.log(options);
-    const handleChange = (e) =>{
-        setSelected(e.target.value)
-    }
 
+    const {uid} = useAuthContext();
+
+    const handleChange = (e) =>{
+        const product = {id, image ,title ,price ,option: selected, quantity : 1};
+        addOrUpdateToCart(uid, product);
+    }
+ 
     const handleClick = (e) =>{
         e.preventDefault();
-        alert('장바구니에 추가되었습니다.');
-        prompt('장바구니에 이동하시겠습니까?');
+
     }
     return (
         <section className='flex w-full gap-5 items-start justify-center py-28'>
