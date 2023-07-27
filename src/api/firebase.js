@@ -75,16 +75,16 @@ export async function getProducts() {
   });
 }
 
+
 export async function getCart(userId) {
-  return get(ref(database, `carts/${userId}`)).then((snapshot) => {
-    const items = snapshot.val() || {};
-    //  console.log(items,'item') // 장바구니에 담으면 items에 추가됨
-    return Object.values(items);
-  });
+  return get(ref(database, `carts/${userId}`)) //
+    .then((snapshot) => {
+      const items = snapshot.val() || {};
+      return Object.values(items);
+    });
 }
 
 export async function addOrUpdateToCart(userId, product) {
-  console.log("userId", userId);
   return set(ref(database, `carts/${userId}/${product.id}`), product);
 }
 

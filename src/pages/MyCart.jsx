@@ -2,51 +2,58 @@ import React, { useEffect, useState } from "react";
 import { getCart } from "../api/firebase";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthContext } from "../context/AuthContext";
-import { useCartContext } from "../context/CartContext";
+import CartItem from "../components/CartItem";
+import PriceCard from "../components/PriceCard";
+import { FaEquals } from "react-icons/fa";
+import { AiOutlinePlus } from "react-icons/ai";
+import Button from "../components/ui/Button";
+import { useMutation } from "react-query";
+
+const SHIPPING = 3000;
 
 export default function MyCart() {
   //   const { cart, setCarts } = useCartContext();
   const { uid } = useAuthContext();
+  const {
+    isLoading,
+    error,
+    data: products,
+  } = useQuery(["carts"], () => getCart(uid));
 
-  const { data: products } = useQuery(["carts"], () => getCart(uid));
-  console.log("제품데이터", products);
-  const [total, setTotal] = useState(0);
+  if (isLoading) return <p>Loading...</p>;
 
-  const handleIncrease = () => {
-    setTotal((num) => num + 1);
-  };
+  const hasProducts = products && products.length > 0;
 
-  const handleDecrease = () => {
-    setTotal((num) => num - 1);
-  };
+  const totalPrice =
+    products &&
+    products.reduce(
+      (prev, current) => prev + parseInt(current.price) * current.quantity,
+      0
+    );
   return (
-    <section className="w-full">
-      <h2 className="text-3xl py-7 italic underline text-center font-bold">
-        My Cart
-      </h2>
-      <ul className="w-full flex gap-10 flex-wrap">
-        {products.map((product) => (
-          <li key={product.id} className="flex flex-col justify-evenly">
-            <div className="">
-              <img
-                className="w-80 rounded"
-                src={product.image}
-                alt={product.id}
-              />
-              <div>
-                <h4>{product.title}</h4>
-                <h4>{product.option}</h4>
-                <h4>{product.price}</h4>
-              </div>
-            </div>
-            <div>
-              <button onClick={handleDecrease}>-</button>
-              <div>{total}</div>
-              <button onClick={handleIncrease}>+</button>
-            </div>
-          </li>
-        ))}
-      </ul>
+    <section>
+      {!hasProducts && <p>장바구니에 담긴 상품이 없습니다.</p>}
+      {hasProducts && (
+        <>
+          <h1 className="text-3xl font-bold text-center py-5 italic">
+            My Cart
+          </h1>
+          <ul className="flex gap-10 flex-wrap my-10">
+            {products &&
+              products.map((product) => (
+                <CartItem key={product.id} product={product} uid={uid} />
+              ))}
+          </ul>
+        </>
+      )}
+      <div className="border flex items-center gap-6 p-3 my-10 justify-end">
+        <PriceCard text="상품 총액" price={totalPrice} />
+        <AiOutlinePlus />
+        <PriceCard text="배송액" price={SHIPPING} />
+        <FaEquals />
+        {/* <PriceCard text="총가격" price={totalPrice + SHIPPING} /> */}
+        <Button text="주문하기" />
+      </div>
     </section>
   );
 }
