@@ -14,7 +14,10 @@ export default function CartItem({
   const cartQuery = useMutation(
     ({ uid, product }) => addOrUpdateToCart(uid, product),
     {
-      onSuccess: () => client.invalidateQueries(["carts"]),
+      onSuccess: () => {
+        // console.log("test");
+        client.invalidateQueries(["carts"]);
+      },
     }
   );
   const handleClickMinus = () => {
@@ -24,6 +27,8 @@ export default function CartItem({
       { uid, product },
       {
         onSuccess: () => {
+          console.log("test");
+          console.log("수량", product);
           if (quantity < 2) return;
           addOrUpdateToCart(uid, { ...product, quantity: quantity - 1 });
         },
