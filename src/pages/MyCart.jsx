@@ -8,17 +8,16 @@ import { FaEquals } from "react-icons/fa";
 import { AiOutlinePlus } from "react-icons/ai";
 import Button from "../components/ui/Button";
 import { useMutation } from "react-query";
-
+import useCart from "../hooks/useCart";
 const SHIPPING = 3000;
 
 export default function MyCart() {
   //   const { cart, setCarts } = useCartContext();
   const { uid } = useAuthContext();
+
   const {
-    isLoading,
-    error,
-    data: products,
-  } = useQuery(["carts"], () => getCart(uid));
+    queryCarts: { isLoading, data: products },
+  } = useCart();
 
   if (isLoading) return <p>Loading...</p>;
 

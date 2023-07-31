@@ -2,6 +2,7 @@ import { addOrUpdateToCart, removeFromCart } from "../api/firebase";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
+import useCart from "../hooks/useCart";
 
 export default function CartItem({
   uid,
@@ -10,49 +11,25 @@ export default function CartItem({
 }) {
   //   console.log("product", product);
 
-  const client = useQueryClient();
-  const cartQuery = useMutation(
-    ({ uid, product }) => addOrUpdateToCart(uid, product),
-    {
-      onSuccess: () => client.invalidateQueries(["carts"]),
-    }
-  );
+  const { cartsAddOrUpdate, removeItem } = useCart();
+  // const cartQuery = useMutation(
+  //   ({ uid, product }) => addOrUpdateToCart(uid, product),
+  //   {
+  //     onSuccess: () => client.invalidateQueries(["carts"]),
+  //   }
+  // );
+
   const handleClickMinus = () => {
-    // if (quantity < 2) return;
-    // addOrUpdateToCart(uid, { ...product, quantity: quantity - 1 });
-    cartQuery.mutate(
-      { uid, product },
-      {
-        onSuccess: () => {
-          if (quantity < 2) return;
-          addOrUpdateToCart(uid, { ...product, quantity: quantity - 1 });
-        },
-      }
-    );
+    if (quantity < 2) return;
+    cartsAddOrUpdate.mutate({ ...product, quantity: quantity - 1 });
   };
 
   const handleClickAdd = () => {
-    cartQuery.mutate(
-      { uid, product },
-      {
-        onSuccess: () => {
-          //   console.log("test");
-          addOrUpdateToCart(uid, { ...product, quantity: quantity + 1 });
-        },
-      }
-    );
+    cartsAddOrUpdate.mutate({ ...product, quantity: quantity + 1 });
   };
 
   const handleClickDelete = () => {
-    cartQuery.mutate(
-      { uid, product },
-      {
-        onSuccess: () => {
-          removeFromCart(uid, id);
-          alert("제품이 삭제되었습니다.");
-        },
-      }
-    );
+    removeItem.mutate(id);
   };
 
   return (
@@ -68,9 +45,9 @@ export default function CartItem({
         <span>{quantity}</span>
         <button onClick={handleClickMinus}>-</button>
         <RiDeleteBin5Fill onClick={handleClickDelete} />
-        <button onClick={() => client.invalidateQueries(["carts"])}>
+        {/* <button onClick={() => client.invalidateQueries(["carts"])}>
           무효화버튼test
-        </button>
+        </button> */}
       </div>
     </li>
   );
