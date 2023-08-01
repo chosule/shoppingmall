@@ -11,6 +11,7 @@ export default function CartItem({
 }) {
   //   console.log("product", product);
 
+<<<<<<< HEAD
   const { cartsAddOrUpdate, removeItem } = useCart();
   // const cartQuery = useMutation(
   //   ({ uid, product }) => addOrUpdateToCart(uid, product),
@@ -22,6 +23,32 @@ export default function CartItem({
   const handleClickMinus = () => {
     if (quantity < 2) return;
     cartsAddOrUpdate.mutate({ ...product, quantity: quantity - 1 });
+=======
+  const client = useQueryClient();
+  const cartQuery = useMutation(
+    ({ uid, product }) => addOrUpdateToCart(uid, product),
+    {
+      onSuccess: () => {
+        // console.log("test");
+        client.invalidateQueries(["carts"]);
+      },
+    }
+  );
+  const handleClickMinus = () => {
+    // if (quantity < 2) return;
+    // addOrUpdateToCart(uid, { ...product, quantity: quantity - 1 });
+    cartQuery.mutate(
+      { uid, product },
+      {
+        onSuccess: () => {
+          console.log("test");
+          console.log("수량", product);
+          if (quantity < 2) return;
+          addOrUpdateToCart(uid, { ...product, quantity: quantity - 1 });
+        },
+      }
+    );
+>>>>>>> 6ddc310d9dace69521bf56ca945c0f6fc4d4e346
   };
 
   const handleClickAdd = () => {

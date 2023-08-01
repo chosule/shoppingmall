@@ -24,5 +24,4 @@ export function useCart() {
 
   return { queryCarts, cartsAddOrUpdate, removeItem };
 }
-
 export default useCart;
